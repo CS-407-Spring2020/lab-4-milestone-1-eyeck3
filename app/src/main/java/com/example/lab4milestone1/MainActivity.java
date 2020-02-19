@@ -4,12 +4,16 @@ import androidx.appcompat.app.AppCompatActivity;
 
 import android.view.View;
 
+import android.util.Log;
+
 import android.widget.Button;
 
 import android.os.Bundle;
 
 public class MainActivity extends AppCompatActivity {
 
+
+    private static final String TAG = "MainActivity";
 
     private Button buttonStartThread;
 
@@ -45,6 +49,37 @@ public class MainActivity extends AppCompatActivity {
 
         @Override
         public void run(){
+            for (int i = 0; i < seconds; i++) {
+                if (stopThread) {
+                    runOnUiThread(new Runnable() {
+                        @Override
+                        public void run() {
+                            buttonStartThread.setText("Start");
+                        }
+                    });
+                    return;
+                }
+                if (i == 5) {
+                    runOnUiThread(new Runnable() {
+                        @Override
+                        public void run() {
+                            buttonStartThread.setText("50%");
+                        }
+                    });
+                }
+                Log.d(TAG, "startThread: " + i);
+                try {
+                    Thread.sleep(1000);
+                } catch (InterruptedException e) {
+                    e.printStackTrace();
+                }
+            }
+            runOnUiThread(new Runnable() {
+                @Override
+                public void run() {
+                    buttonStartThread.setText("Start");
+                }
+            });
 
         }
 
